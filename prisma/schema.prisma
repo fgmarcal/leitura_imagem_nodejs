@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database/dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Customer {
+  customer_code String    @id @unique
+  measures      Measure[]
+}
+
+model Measure {
+  measure_uuid     String   @id @default(uuid())
+  measure_datetime DateTime
+  measure_type     String
+  has_confirmed    Boolean
+  image_url        String
+  customer_code    String   @map("customer_code")
+  customer         Customer @relation(fields: [customer_code], references: [customer_code], onDelete: Cascade)
+}
