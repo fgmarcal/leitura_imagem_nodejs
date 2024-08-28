@@ -29,7 +29,7 @@ private async saveFile(image:String):Promise<string>
         fs.writeFile(filePath,base64Image, {encoding: 'base64'}, 
         function(err){
             if(err){
-                console.log(err)
+                console.error(err)
                 console.log('Error to create file:'+filePath)
             }
         });

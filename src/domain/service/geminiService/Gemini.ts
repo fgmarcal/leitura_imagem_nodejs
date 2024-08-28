@@ -18,10 +18,14 @@ export class GeminiService implements IGeminiService{
 
     async consultWithAi(file: string): Promise<string> {
         const prompt =  `
-            You're receiving a base64 file as a string; read this ${file} and identify if this is a brazilian WATER or GAS bill.
-            If this is a valid bill (WATER or GAS), find the due amount and return it as a string.
-            If this is not a valid bill, return -1 as a string.
-            Do not send any other information rather then the amount or -1
+            The following text is a base64 link to a PNG image.
+            The encoded file is an image of a Water or Gas bill.
+            Identify the amount due on the bill, looking for phrases like "valor total", "valor", "valor da fatura", "valor devido", "total", or "total da guia".
+            Return the amount as text (string), including decimal places (cents).
+            The value should start with the currency symbol "R$", but only return the numerical value.
+            If the bill is not for water or gas, return -3.
+            If the amount cannot be identified, return -1:
+            ${file}
         `
         const result = await this.model.generateContent(prompt);
         return result.response.text();

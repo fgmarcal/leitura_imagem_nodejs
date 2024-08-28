@@ -42,6 +42,15 @@ export class MeasureService implements IMeasureService{
             throw new InvalidDataException(INVALID_DATA)
         }
         const aiValidation = await this.validateFileWithAI(dto.image);
+        console.log(aiValidation)
+        if(aiValidation < 0 ||  typeof NaN){
+            const INVALID_DATA = {
+                errorCode:"INVALID_DATA",
+                errorDescription:"Há campos inválidos na requisição",
+                status:400
+            } 
+            throw new InvalidDataException(INVALID_DATA)
+        }
         createMeasure.customer_code = dto.customer_code
         createMeasure.measure_type = dto.measure_type
         createMeasure.measure_value = aiValidation

@@ -7,8 +7,8 @@ import { measureRouter } from './routes/measureRoute';
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+app.use(express.json({limit:'15mb'}));
+app.use(express.urlencoded({limit:'15mb', extended:true}))
 
 app.use(customerRouter)
 app.use(measureRouter)
