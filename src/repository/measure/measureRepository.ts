@@ -14,9 +14,26 @@ export class MeasureRepository implements IMeasureRepository{
         
         return result as Measure 
     }
+
+    async findByDate(customer_code: string, date: Date): Promise<boolean> {
+        const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
     
-    async register(dto:MeasureDTO): Promise<void> {
-        await prisma.measure.create({
+        const result = await prisma.measure.findFirst({
+            where: {
+                customer_code: customer_code,
+                measure_datetime: {
+                    gte: startOfMonth,
+                    lte: endOfMonth,
+                },
+            },
+        });
+    
+        return result !== null;
+    }
+    
+    async register(dto:MeasureDTO): Promise<Measure> {
+        const result = await prisma.measure.create({
             data:{
                 customer:{connect:{customer_code:dto.customer_code}},
                 measure_datetime: dto.measure_datetime,
@@ -27,6 +44,7 @@ export class MeasureRepository implements IMeasureRepository{
             }
         })
         await prisma.$disconnect();
+        return result;
     }
 
 
