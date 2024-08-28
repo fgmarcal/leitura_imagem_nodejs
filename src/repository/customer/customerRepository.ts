@@ -7,27 +7,8 @@ import { Customer } from "@prisma/client";
 
 export class CustomerRepository implements ICustomerRepository{
 
-    async register(customer: CreateCustomerDTO): Promise<void> {
-        await prisma.customer.create({
-            data: {
-                customer_code: customer.customer_code,
-                measures: {
-                    create: customer.measures.map(measure => ({
-                        measure_uuid: measure.measure_uuid,
-                        measure_datetime: measure.measure_datetime,
-                        measure_type: measure.measure_type,
-                        measure_value:measure.measure_value,
-                        has_confirmed: measure.has_confirmed,
-                        image_url: measure.image_url,
-                    })),
-                },
-            },
-        });
-        await prisma.$disconnect();
-    }
-
-    async getCustomer(params:QueryParams): Promise<Customer>{
-        const customer = await prisma.customer.findUniqueOrThrow({
+    async getCustomer(params:QueryParams): Promise<Customer | null>{
+        const customer = await prisma.customer.findUnique({
             where: {
                 customer_code: params.customer_code,
             },
@@ -41,6 +22,9 @@ export class CustomerRepository implements ICustomerRepository{
         });
 
         prisma.$disconnect();
+        if(customer === null){
+            return null;
+        }
         return customer;
     }
     

@@ -7,5 +7,7 @@ const customerRouter = asyncify(express.Router());
 const customerController = new CustomerController();
 
 customerRouter
-    .route('/[:customer_code]/list')
-    .get(customerController.getCustomer)
+    .route('/:customer_code/list')
+    .get(customerController.getCustomer);
+
+export {customerRouter};

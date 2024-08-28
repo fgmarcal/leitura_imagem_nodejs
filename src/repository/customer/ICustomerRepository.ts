@@ -4,7 +4,5 @@ import { QueryParams } from "../../domain/dto/params/queryParams";
 
 
 export interface ICustomerRepository{
-
-    register(customer:CreateCustomerDTO):Promise<void>
-    getCustomer(query:QueryParams):Promise<Customer>
+    getCustomer(query:QueryParams):Promise<Customer|null>
 }
