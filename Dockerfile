@@ -22,13 +22,22 @@ FROM node:18-slim
 # Define o diretório de trabalho dentro do container
 WORKDIR /usr/src/app
 
+# Instala OpenSSL e outras dependências necessárias
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    apt-get clean
+
 # Copia os arquivos do build e as dependências da imagem anterior
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package*.json ./
+COPY --from=build /usr/src/app/prisma ./prisma
+
+# Instala o Prisma CLI
+RUN npm install -g prisma
 
 # Expõe a porta em que a aplicação será executada
 EXPOSE 3000
 
-# Define o comando para iniciar a aplicação
-CMD ["node", "dist/server.js"]
+# Comando para aplicar migrações e iniciar a aplicação
+CMD ["sh", "-c", "prisma migrate deploy && node dist/server.js"]
