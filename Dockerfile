@@ -17,6 +17,9 @@ RUN npm ci
 # Copia todos os arquivos do projeto para o diretório de trabalho
 COPY . .
 
+# Copia arquivo de variável de ambiente
+COPY .env /usr/src/app/.env
+
 # Gera o build do projeto
 RUN npm run build
 

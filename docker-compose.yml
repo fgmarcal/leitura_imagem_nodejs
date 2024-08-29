@@ -5,11 +5,12 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - API_KEY=${API_KEY}
+      - API_KEY
     volumes:
       - ./prisma/database:/usr/src/app/prisma/database
       - ./prisma/schema.prisma:/usr/src/app/prisma/schema.prisma
       - ./src/public:/usr/src/app/dist/public
+      - ./.env:/usr/src/app/.env
 
 volumes:
   db:
