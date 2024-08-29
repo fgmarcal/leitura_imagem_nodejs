@@ -5,7 +5,7 @@ import path from 'node:path'
 import dotenv from 'dotenv';
 
 dotenv.config();
-//TODO
+
 export class GeminiService implements IGeminiService{
 
     private publicPath:string = path.join(__dirname, '../../../public')
@@ -13,7 +13,7 @@ export class GeminiService implements IGeminiService{
     private API_KEY:string = String(process.env.GEMINI_API_KEY);
     private genAI:GoogleGenerativeAI = new GoogleGenerativeAI(this.API_KEY);
 
-    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-flash"});
+    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-flash-latest"});
 
 
 
@@ -34,7 +34,7 @@ export class GeminiService implements IGeminiService{
         try {
             const imageData = await fs.promises.readFile(filePath);
             const imageBase64 = imageData.toString("base64");
-            const parts:Part[] = 
+            const request = 
                 [
                     {
                     text:prompt
@@ -47,10 +47,10 @@ export class GeminiService implements IGeminiService{
                 }                
             ]
 
-            const result = await this.model.generateContent(parts)
+            const result = await this.model.generateContent([prompt,...request])
 
             const response = result.response;
-            
+
             return response.text();
         } catch (e) {
             console.error(e)

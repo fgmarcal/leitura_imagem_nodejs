@@ -12,6 +12,12 @@ export const MEASURE_NOT_FOUND:baseError = {
     status:404
 }
 
+export const CUSTOMER_NOT_FOUND:baseError = {
+    errorCode:"CUSTOMER_NOT_FOUND",
+    errorDescription:"Nenhum cliente encontrado",
+    status:404
+}
+
 export const CONFIRMATION_DUPLICATE:baseError = {
     errorCode:"CONFIRMATION_DUPLICATE",
     errorDescription:"Leitura do mês já realizada",

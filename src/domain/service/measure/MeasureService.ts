@@ -44,16 +44,15 @@ export class MeasureService implements IMeasureService{
         const aiValidation = await this.validateFileWithAI(imageURL, getImgExtension);
         createMeasure.measure_value = this.validateMeasureValue(aiValidation)
 
-        const dateValidation = await this.measureRepository.findByDate(dto.customer_code,dto.measure_datetime)
-        if(!dateValidation){
+        const measureExists = await this.measureRepository.findByDate(dto.customer_code,dto.measure_datetime)
+        if(measureExists){
             throw new DuplicateDataException(DOUBLE_REPORT)
         }
         createMeasure.measure_datetime = new Date(dto.measure_datetime)
         createMeasure.image_url = imageURL;
-
         createMeasure.measure_type = dto.measure_type
-
         createMeasure.customer_code = dto.customer_code
+
         await this.customerService.createCustomer(dto.customer_code)
         
         return await this.measureRepository.register(createMeasure)

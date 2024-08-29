@@ -3,7 +3,7 @@ import { ICustomerService } from "./ICustomerService";
 import { CustomerRepository } from "../../../repository/customer/customerRepository";
 import { QueryParams } from "../../dto/params/queryParams";
 import { InvalidTypeException, NotFoundException } from "../../../exceptions/Exceptions";
-import { INVALID_TYPE, MEASURE_NOT_FOUND } from "../../../exceptions/errorCodes";
+import { CUSTOMER_NOT_FOUND, INVALID_TYPE } from "../../../exceptions/errorCodes";
 
 export class CustomerService implements ICustomerService{
 
@@ -22,12 +22,12 @@ export class CustomerService implements ICustomerService{
         }
         const result = await this.customerRepository.getCustomer(params);
         if(result === null) {
-            throw new NotFoundException(MEASURE_NOT_FOUND);
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
         return result;
     }
 
     async createCustomer(code:string): Promise<void>{
-        this.customerRepository.createCustomer(code);
+        await this.customerRepository.createCustomer(code);
     }
 }

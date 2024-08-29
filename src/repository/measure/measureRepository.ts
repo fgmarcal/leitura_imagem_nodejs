@@ -30,7 +30,7 @@ export class MeasureRepository implements IMeasureRepository{
                 },
             },
         });    
-        return result === null;
+        return result !== null;
     }
     
     async register(dto:MeasureDTO): Promise<Measure> {

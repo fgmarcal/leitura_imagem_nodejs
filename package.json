@@ -7,7 +7,8 @@
     "dev": "ts-node-dev src/server.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "vitest"
+    "test": "vitest --ui --coverage.enabled=true",
+    "coverage": "vitest run --coverage"
   },
   "author": "Felipe Garcia Marcal",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "@types/node": "^22.5.0",
     "@types/tesseract.js": "^2.0.0",
     "@vitest/coverage-v8": "^2.0.5",
+    "@vitest/ui": "^2.0.5",
     "prisma": "^5.18.0",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4",

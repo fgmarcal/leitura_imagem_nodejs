@@ -1,4 +1,3 @@
-import { CreateCustomerDTO } from "../../domain/dto/customer/createCustomerDTO";
 import { QueryParams } from "../../domain/dto/params/queryParams";
 import { prisma } from "../../domain/service/prisma/prisma";
 import { ICustomerRepository } from "./ICustomerRepository";
