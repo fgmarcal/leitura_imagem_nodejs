@@ -24,6 +24,7 @@ export class GenericCustomError extends Error{
             "error_code":this.errorCode,
             "error_description":this.errorDescription
         }
+        console.error(this)
         return response;
     }
 }

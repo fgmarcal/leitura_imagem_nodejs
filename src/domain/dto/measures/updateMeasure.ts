@@ -1,4 +1,4 @@
-export interface UpdateMeasureDTO {
-    measure_uuid: string,
-    confirmed_value: number        
+export interface UpdateMeasureDTO{
+    measure_value:number,
+    has_confirmed:boolean
 }

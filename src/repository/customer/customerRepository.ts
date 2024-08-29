@@ -7,6 +7,15 @@ import { Customer } from "@prisma/client";
 
 export class CustomerRepository implements ICustomerRepository{
 
+    async createCustomer(code:string): Promise<void>{
+        await prisma.customer.create({
+            data:{
+                customer_code:code
+            }   
+        });
+        prisma.$disconnect();
+    }
+
     async getCustomer(params:QueryParams): Promise<Customer | null>{
         const customer = await prisma.customer.findUnique({
             where: {

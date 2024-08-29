@@ -1,8 +1,9 @@
 import { Measure } from "@prisma/client";
 import { MeasureDTO } from "../../domain/dto/measures/createMeasure";
-import { UpdateMeasureDTO } from "../../domain/dto/measures/updateMeasure";
+import { UpdateMeasureRequestDTO } from "../../domain/dto/measures/UpdateMeasureDTO";
 import { prisma } from "../../domain/service/prisma/prisma";
 import { IMeasureRepository } from "./IMeasureRepository";
+import { UpdateMeasureDTO } from "../../domain/dto/measures/updateMeasure";
 
 export class MeasureRepository implements IMeasureRepository{
 
@@ -48,13 +49,14 @@ export class MeasureRepository implements IMeasureRepository{
     }
 
 
-    async update(dto:UpdateMeasureDTO): Promise<void> {
-        const updateData:any = {
-            confirmed_value:dto.confirmed_value
+    async update(dto:UpdateMeasureRequestDTO): Promise<void> {
+        const measure:UpdateMeasureDTO = {
+            measure_value:dto.confirmed_value,
+            has_confirmed:true
         }
         await prisma.measure.update({
             where:{measure_uuid:dto.measure_uuid},
-            data:updateData
+            data:measure
         });
     }
 

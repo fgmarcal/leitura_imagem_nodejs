@@ -2,7 +2,6 @@
 import { Measure } from "@prisma/client";
 import { IMeasureRepository } from "../../../repository/measure/IMeasureRepository";
 import { MeasureDTO } from "../../dto/measures/createMeasure";
-import { UpdateMeasureDTO } from "../../dto/measures/updateMeasure";
 import { IMeasureService } from "./IMeasureService";
 import { IGeminiService } from "../geminiService/IGeminiService";
 import { AIErrorException, DuplicateDataException, InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
@@ -11,6 +10,10 @@ import { IImageService } from "../imageService/IImageService";
 import { AI_ERROR, CONFIRMATION_DUPLICATE, DOUBLE_REPORT, INVALID_DATA, MEASURE_NOT_FOUND } from "../../../exceptions/errorCodes";
 import { GeminiService } from "../geminiService/Gemini";
 import { ImageService } from "../imageService/ImageService";
+import { ICustomerService } from "../customer/ICustomerService";
+import { CustomerService } from "../customer/CustomerService";
+import { ICustomerRepository } from "../../../repository/customer/ICustomerRepository";
+import { UpdateMeasureRequestDTO } from "../../dto/measures/UpdateMeasureDTO";
 
 export class MeasureService implements IMeasureService{
 
@@ -19,11 +22,14 @@ export class MeasureService implements IMeasureService{
     private geminiService:IGeminiService
 
     private imageService:IImageService
+
+    private customerService:ICustomerService
     
-    constructor(measureRepository:IMeasureRepository){
+    constructor(measureRepository:IMeasureRepository, customerRepository:ICustomerRepository){
         this.measureRepository = measureRepository;
         this.geminiService = new GeminiService();
         this.imageService = new ImageService()
+        this.customerService = new CustomerService(customerRepository);
     }
 
     async register(dto: UploadMeasureDTO): Promise<Measure> {
@@ -44,13 +50,16 @@ export class MeasureService implements IMeasureService{
         }
         createMeasure.measure_datetime = new Date(dto.measure_datetime)
         createMeasure.image_url = imageURL;
-        createMeasure.customer_code = dto.customer_code
+
         createMeasure.measure_type = dto.measure_type
+
+        createMeasure.customer_code = dto.customer_code
+        await this.customerService.createCustomer(dto.customer_code)
         
         return await this.measureRepository.register(createMeasure)
     }
 
-    async confirm(dto: UpdateMeasureDTO): Promise<void> {
+    async confirm(dto: UpdateMeasureRequestDTO): Promise<void> {
         const validateMeasure = await this.measureRepository.find(dto.measure_uuid);
         if(!this.isValidBodyRequestToUpdate(dto)){
             throw new InvalidDataException(INVALID_DATA)
@@ -82,7 +91,7 @@ export class MeasureService implements IMeasureService{
         return false
     }
 
-    private isValidBodyRequestToUpdate(dto:UpdateMeasureDTO):boolean{
+    private isValidBodyRequestToUpdate(dto:UpdateMeasureRequestDTO):boolean{
         if(dto.confirmed_value && dto.measure_uuid){
             return true;
         }

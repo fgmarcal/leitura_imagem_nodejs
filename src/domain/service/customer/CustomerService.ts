@@ -26,4 +26,8 @@ export class CustomerService implements ICustomerService{
         }
         return result;
     }
+
+    async createCustomer(code:string): Promise<void>{
+        this.customerRepository.createCustomer(code);
+    }
 }

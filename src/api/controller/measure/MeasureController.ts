@@ -4,13 +4,16 @@ import { IMeasureRepository } from "../../../repository/measure/IMeasureReposito
 import { IMeasureService } from "../../../domain/service/measure/IMeasureService";
 import { MeasureService } from "../../../domain/service/measure/MeasureService";
 import { UploadMeasureDTO } from "../../../domain/dto/measures/uploadMeasure";
-import { UpdateMeasureDTO } from "../../../domain/dto/measures/updateMeasure";
+import { ICustomerRepository } from "../../../repository/customer/ICustomerRepository";
+import { CustomerRepository } from "../../../repository/customer/customerRepository";
+import { UpdateMeasureRequestDTO } from "../../../domain/dto/measures/UpdateMeasureDTO";
 
 export class MeasureController {
     
     async upload(request:Request, response:Response, next:NextFunction){
         const measureRepository:IMeasureRepository = new MeasureRepository()
-        const measureService:IMeasureService = new MeasureService(measureRepository);
+        const customerRepository:ICustomerRepository = new CustomerRepository()
+        const measureService:IMeasureService = new MeasureService(measureRepository, customerRepository);
 
         const requestBody:UploadMeasureDTO = request.body
         try {
@@ -24,9 +27,10 @@ export class MeasureController {
 
     async confirm(request:Request, response:Response, next:NextFunction){
         const measureRepository:IMeasureRepository = new MeasureRepository()
-        const measureService:IMeasureService = new MeasureService(measureRepository);
+        const customerRepository:ICustomerRepository = new CustomerRepository()
+        const measureService:IMeasureService = new MeasureService(measureRepository, customerRepository);
 
-        const requestBody:UpdateMeasureDTO = request.body;
+        const requestBody:UpdateMeasureRequestDTO = request.body;
 
         try {
             await measureService.confirm(requestBody);

@@ -5,8 +5,6 @@ import fs from 'node:fs'
 
 export class ImageService implements IImageService{
 
-    
-
     private publicPath:string = path.join(__dirname, '../../../public/img')
 
     async create(image: string): Promise<string> {

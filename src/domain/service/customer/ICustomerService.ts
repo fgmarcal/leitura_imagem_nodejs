@@ -4,4 +4,5 @@ import { QueryParams } from "../../dto/params/queryParams";
 export interface ICustomerService{
 
     getCustomer(params:QueryParams):Promise<Customer|null>
+    createCustomer(code:string): Promise<void>
 }
