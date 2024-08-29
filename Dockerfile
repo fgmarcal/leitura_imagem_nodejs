@@ -4,6 +4,10 @@ FROM node:18 AS build
 # Define o diretório de trabalho dentro do container
 WORKDIR /usr/src/app
 
+# Cria diretório para imagens e dá autorização de escrita
+RUN mkdir -p /usr/src/app/dist/public/img && chmod -R 755 /usr/src/app/dist
+
+
 # Copia o package.json e o package-lock.json para o diretório de trabalho
 COPY package*.json ./
 
