@@ -5,13 +5,19 @@ services:
     build: .
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
     volumes:
-      - .:/app
-    command: npm run dev
+      - ./database:/usr/src/app/database
     depends_on:
-      - db
+      - prisma
 
-  db:
-    image: nouchka/sqlite3
+  prisma:
+    image: ghcr.io/prisma/prisma:latest
     volumes:
-      - ./src/database/dev.db:/data/dev.db
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    command: ["prisma", "migrate", "deploy"]
+
+volumes:
+  db:
