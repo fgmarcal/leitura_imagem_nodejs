@@ -9,6 +9,8 @@ const measureController = new MeasureController();
 measureRouter
     .route('/upload')
     .post(measureController.upload)
-    .patch(measureController.confirm);
+measureRouter
+    .route('/confirm')
+    .patch(measureController.confirm)
 
 export {measureRouter};

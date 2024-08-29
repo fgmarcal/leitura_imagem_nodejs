@@ -1,34 +1,59 @@
-import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
-import dotenv from 'dotenv';
+import { GoogleGenerativeAI, GenerativeModel, Part } from "@google/generative-ai";
 import { IGeminiService } from "./IGeminiService";
+import fs from 'node:fs'
+import path from 'node:path'
+import dotenv from 'dotenv';
 
 dotenv.config();
-
+//TODO
 export class GeminiService implements IGeminiService{
 
-    private API_KEY:string;
-    private genAI:GoogleGenerativeAI;
-    private model:GenerativeModel
+    private publicPath:string = path.join(__dirname, '../../../public')
 
-    constructor(){
-        this.API_KEY = String(process.env.GEMINI_API_KEY)
-        this.genAI = new GoogleGenerativeAI(this.API_KEY)
-        this.model = this.genAI.getGenerativeModel({model:"gemini-1.5-flash"});
-    }
+    private API_KEY:string = String(process.env.GEMINI_API_KEY);
+    private genAI:GoogleGenerativeAI = new GoogleGenerativeAI(this.API_KEY);
 
-    async consultWithAi(file: string): Promise<string> {
-        const prompt =  `
-            The following text is a base64 link to a PNG image.
-            The encoded file is an image of a Water or Gas bill.
-            Identify the amount due on the bill, looking for phrases like "valor total", "valor", "valor da fatura", "valor devido", "total", or "total da guia".
-            Return the amount as text (string), including decimal places (cents).
-            The value should start with the currency symbol "R$", but only return the numerical value.
-            If the bill is not for water or gas, return -3.
-            If the amount cannot be identified, return -1:
-            ${file}
+    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-pro"});
+
+
+
+    async consultWithAi(receivedFile: string, extension:string): Promise<string|null> {
+
+        const filePath:string = `${this.publicPath}${receivedFile}`;
+        const mime:string = `image/${extension}`
+
+        const prompt:string =  `
+            Consegue identificar a imagem?\n
+            Trata-se de uma imagem de um hidrômetro ou gasômetro.\n
+            Sua função é identificar o valor da medição.\n
+            A medição é número mostrado no display no artefato de medição.\n
+            O número costuma estar ao centro do artefato de medição.\n
+            Retorne o número de medição completo ou então, em caso de não conseguir identificar, retorne -1.\n
         `
-        const result = await this.model.generateContent(prompt);
-        return result.response.text();
-    }
 
+        try {
+            const imageData = await fs.promises.readFile(filePath);
+            const imageBase64 = imageData.toString("base64");
+            const parts:Part[] = 
+                [
+                    {
+                    text:prompt
+                },
+                    {
+                    inlineData: {
+                        mimeType:mime,
+                        data:imageBase64,
+                    }
+                }                
+            ]
+
+            const result = await this.model.generateContent({ contents: [{ role: "user", parts }] });
+
+            const response = result.response;
+            
+            return response.text();
+        } catch (error) {
+            return null;
+        }
+    }
 }

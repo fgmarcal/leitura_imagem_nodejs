@@ -1,13 +1,5 @@
-interface baseError {
-    errorCode:string,
-    errorDescription:string,
-    status:number
-}
+import { baseError, errorResponse } from "./types"
 
-type errorResponse = {
-    "error_code":string,
-    "error_description":string
-}
 export class GenericCustomError extends Error{
     private errorCode:string
     private errorDescription:string
@@ -55,6 +47,12 @@ export class InvalidTypeException extends GenericCustomError{
 }
 
 export class DuplicateDataException extends GenericCustomError{
+    constructor({errorCode, errorDescription, status}:baseError){
+        super({errorCode, errorDescription, status});
+    }
+}
+
+export class AIErrorException extends GenericCustomError{
     constructor({errorCode, errorDescription, status}:baseError){
         super({errorCode, errorDescription, status});
     }

@@ -5,6 +5,8 @@ import fs from 'node:fs'
 
 export class ImageService implements IImageService{
 
+    
+
     private publicPath:string = path.join(__dirname, '../../../public/img')
 
     async create(image: string): Promise<string> {
@@ -16,7 +18,13 @@ export class ImageService implements IImageService{
         throw new Error("Method not implemented.");
     }
 
-private async saveFile(image:String):Promise<string>
+    getExtension(image:string):string{
+        const split = image.split('base64,');
+        const extension = split[0].split(';')[0].split('/')[1];
+        return extension;
+    }
+
+    private async saveFile(image:String):Promise<string>
     {
         const split = image.split('base64,');
         const extension = split[0].split(';')[0].split('/')[1];

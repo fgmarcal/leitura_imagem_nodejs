@@ -1,4 +1,4 @@
 export interface IGeminiService{
 
-    consultWithAi(file:string):Promise<string>
+    consultWithAi(file:string, extension:string):Promise<string|null>
 }
