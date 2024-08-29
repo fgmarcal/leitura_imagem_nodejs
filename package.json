@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
-    "build": "tsc",
+    "build": "tsc --build",
     "start": "node dist/index.js",
     "test": "vitest --ui --coverage.enabled=true",
     "coverage": "vitest run --coverage"
