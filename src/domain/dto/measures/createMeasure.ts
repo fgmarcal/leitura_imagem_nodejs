@@ -1,4 +1,4 @@
-export interface MeasureDTO {
+export interface CreateMeasureDTO {
     customer_code:string;
     measure_datetime: Date;
     measure_type: string;

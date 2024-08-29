@@ -1,7 +1,7 @@
 
 import { Measure } from "@prisma/client";
 import { IMeasureRepository } from "../../../repository/measure/IMeasureRepository";
-import { MeasureDTO } from "../../dto/measures/createMeasure";
+import { CreateMeasureDTO } from "../../dto/measures/createMeasure";
 import { IMeasureService } from "./IMeasureService";
 import { IGeminiService } from "../geminiService/IGeminiService";
 import { AIErrorException, DuplicateDataException, InvalidDataException, NotFoundException } from "../../../exceptions/Exceptions";
@@ -33,7 +33,7 @@ export class MeasureService implements IMeasureService{
     }
 
     async register(dto: UploadMeasureDTO): Promise<Measure> {
-        const createMeasure:MeasureDTO = this.measureBoilerPlate();
+        const createMeasure:CreateMeasureDTO = this.measureBoilerPlate();
 
         if(!this.isValidBodyRequestToRegister(dto)){
             throw new InvalidDataException(INVALID_DATA)
@@ -97,7 +97,7 @@ export class MeasureService implements IMeasureService{
         return false;
     }
 
-    private measureBoilerPlate():MeasureDTO{
+    private measureBoilerPlate():CreateMeasureDTO{
         return {
             customer_code: "",
             measure_datetime: new Date(),

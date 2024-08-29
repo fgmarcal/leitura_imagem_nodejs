@@ -1,5 +1,5 @@
 import { Measure } from "@prisma/client";
-import { MeasureDTO } from "../../domain/dto/measures/createMeasure";
+import { CreateMeasureDTO } from "../../domain/dto/measures/createMeasure";
 import { UpdateMeasureRequestDTO } from "../../domain/dto/measures/UpdateMeasureDTO";
 import { prisma } from "../../domain/service/prisma/prisma";
 import { IMeasureRepository } from "./IMeasureRepository";
@@ -31,7 +31,7 @@ export class MeasureRepository implements IMeasureRepository{
         return result !== null;
     }
     
-    async register(dto:MeasureDTO): Promise<Measure> {
+    async register(dto:CreateMeasureDTO): Promise<Measure> {
         const result = await prisma.measure.create({
             data:{
                 customer:{connect:{customer_code:dto.customer_code}},
