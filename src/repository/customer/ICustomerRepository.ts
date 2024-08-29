@@ -1,4 +1,3 @@
-import { CreateCustomerDTO } from "../../domain/dto/customer/createCustomerDTO";
 import { Customer } from "@prisma/client";
 import { QueryParams } from "../../domain/dto/params/queryParams";
 
