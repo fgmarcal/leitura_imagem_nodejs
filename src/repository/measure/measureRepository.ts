@@ -11,8 +11,6 @@ export class MeasureRepository implements IMeasureRepository{
         const result = await prisma.measure.findUnique({
             where:{measure_uuid:id}
         })
-        await prisma.$disconnect();
-        
         return result as Measure 
     }
 
@@ -44,7 +42,6 @@ export class MeasureRepository implements IMeasureRepository{
                 image_url: dto.image_url,
             }
         })
-        await prisma.$disconnect();
         return result;
     }
 

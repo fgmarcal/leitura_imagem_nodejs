@@ -12,7 +12,6 @@ export class CustomerRepository implements ICustomerRepository{
                 customer_code:code
             }   
         });
-        prisma.$disconnect();
     }
 
     async getCustomer(params:QueryParams): Promise<Customer | null>{
@@ -29,7 +28,6 @@ export class CustomerRepository implements ICustomerRepository{
             },
         });
 
-        prisma.$disconnect();
         if(customer === null){
             return null;
         }
