@@ -13,7 +13,7 @@ export class GeminiService implements IGeminiService{
     private API_KEY:string = String(process.env.GEMINI_API_KEY);
     private genAI:GoogleGenerativeAI = new GoogleGenerativeAI(this.API_KEY);
 
-    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-pro"});
+    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-flash"});
 
 
 
@@ -47,12 +47,19 @@ export class GeminiService implements IGeminiService{
                 }                
             ]
 
-            const result = await this.model.generateContent({ contents: [{ role: "user", parts }] });
+            const result = await this.model.generateContent({ 
+                contents: [
+                    { 
+                    role: "user", parts 
+                }
+            ] 
+            });
 
             const response = result.response;
             
             return response.text();
         } catch (error) {
+            console.error(error)
             return null;
         }
     }
