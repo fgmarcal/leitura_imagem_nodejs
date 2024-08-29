@@ -2,6 +2,7 @@ import { Url } from "url";
 import { IImageService } from "./IImageService";
 import path from 'node:path'
 import fs from 'node:fs'
+import crypto from 'node:crypto'
 
 export class ImageService implements IImageService{
 
