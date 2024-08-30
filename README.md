@@ -11,7 +11,7 @@ obter a medição através da foto de um medidor.
 **Geração de uma API KEY**
 - Para utilização desta LLM, será necessária a criação de uma [API_KEY](https://ai.google.dev/gemini-api/docs/api-key)
 
-## Tecnlogias Utilizadas
+## Tecnologias Utilizadas
 
 - **Node.js 18**: Ambiente de execução
 - **TypeScript**: Superset do JavaScript
