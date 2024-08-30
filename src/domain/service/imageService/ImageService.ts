@@ -1,20 +1,27 @@
-import { Url } from "url";
 import { IImageService } from "./IImageService";
 import path from 'node:path'
 import fs from 'node:fs'
 import crypto from 'node:crypto'
+import { imagePath } from "./ImagePath";
+
+
 
 export class ImageService implements IImageService{
 
-    private publicPath:string = path.join(__dirname, '../../../public/img')
+    private publicPath:string = imagePath;
 
     async create(image: string): Promise<string> {
         const fileName = await this.saveFile(image);
-        return fileName;
+        const fullpathFile = this.publicPath + fileName;
+        return fullpathFile;
     }
 
-    async delete(url: Url): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(url: string): Promise<void> {
+        try {
+            await fs.promises.unlink(url)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     getExtension(image:string):string{
@@ -41,7 +48,7 @@ export class ImageService implements IImageService{
             }
         });
 
-        return '/img/'+fileName;
+        return fileName;
     }
 
 }

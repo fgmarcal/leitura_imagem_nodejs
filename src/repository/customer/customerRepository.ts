@@ -1,3 +1,4 @@
+import { CreateMeasureDTO } from "../../domain/dto/measures/createMeasure";
 import { QueryParams } from "../../domain/dto/params/queryParams";
 import { prisma } from "../../domain/service/prisma/prisma";
 import { ICustomerRepository } from "./ICustomerRepository";
@@ -11,6 +12,25 @@ export class CustomerRepository implements ICustomerRepository{
             data:{
                 customer_code:code
             }   
+        });
+    }
+
+    async updateCustomer(measure: CreateMeasureDTO): Promise<void> {
+        await prisma.customer.update({
+            where: {
+                customer_code: measure.customer_code,
+            },
+            data: {
+                measures: {
+                    create: {
+                        measure_datetime: measure.measure_datetime,
+                        measure_type: measure.measure_type,
+                        measure_value: measure.measure_value,
+                        has_confirmed: measure.has_confirmed,
+                        image_url: measure.image_url,
+                    }
+                }
+            }
         });
     }
 
