@@ -177,5 +177,13 @@ Versão: A versão "gemini-1.5-pro" pode não ser a mais adequada para tarefas d
 Capacidades: Lembre-se que modelos de linguagem, como o Gemini, são treinados principalmente para gerar texto. Embora possam processar imagens, sua performance em tarefas de OCR pode ser limitada em comparação com modelos especializados.*
 
 
+Foram testados outros modelos:
+  - gemini-1.5-pro-latest
+  - gemini-1.5-flash
+  - gemini-1.5-flash-latest
+
+Nenhum modelo correspondeu inteiramente ao esperado, apenas o modelo *gemini-1.5-flash-latest* ofereceu uma resposta -1 em alguns testes.
+
+
 
 
