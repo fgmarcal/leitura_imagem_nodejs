@@ -5,16 +5,18 @@ import { MeasureType, QueryParams } from '../../../domain/dto/params/queryParams
 
 import { CUSTOMER_NOT_FOUND, INVALID_TYPE } from '../../../exceptions/errorCodes';
 import { Customer } from '@prisma/client';
+import { ICustomerService } from '../../../domain/service/customer/ICustomerService';
+import { CreateMeasureDTO } from '../../../domain/dto/measures/createMeasure';
 
 describe('CustomerService', () => {
-  let customerService: CustomerService;
+  let customerService: ICustomerService;
   let mockCustomerRepository: CustomerRepository;
 
   beforeEach(() => {
-    // Mock CustomerRepository
     mockCustomerRepository = {
       getCustomer: vi.fn(),
       createCustomer: vi.fn(),
+      updateCustomer:vi.fn(),
     } as unknown as CustomerRepository;
 
     customerService = new CustomerService(mockCustomerRepository);
@@ -66,4 +68,24 @@ describe('CustomerService', () => {
 
     expect(mockCustomerRepository.createCustomer).toHaveBeenCalledWith(customerCode);
   });
+
+  it('should update a customer successfully', async () => {
+    const customerCode = 'CUST123';
+
+    await customerService.createCustomer(customerCode);
+
+    const measure: CreateMeasureDTO = {
+      customer_code: 'CUST123',
+      measure_datetime: new Date(),
+      measure_type: 'WATER',
+      measure_value: 70,
+      has_confirmed: true,
+      image_url: 'img/image.png',
+    };
+  
+    await customerService.updateCustomer(measure);
+  
+    expect(mockCustomerRepository.updateCustomer).toHaveBeenCalledWith(measure);
+  });
+
 });

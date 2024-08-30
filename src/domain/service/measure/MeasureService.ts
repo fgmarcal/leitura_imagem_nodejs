@@ -8,7 +8,7 @@ import { AIErrorException, DuplicateDataException, InvalidDataException, NotFoun
 import { UploadMeasureDTO } from "../../dto/measures/uploadMeasure";
 import { IImageService } from "../imageService/IImageService";
 import { AI_ERROR, CONFIRMATION_DUPLICATE, DOUBLE_REPORT, INVALID_DATA, MEASURE_NOT_FOUND } from "../../../exceptions/errorCodes";
-import { GeminiService } from "../geminiService/Gemini";
+import { GeminiService } from "../geminiService/GeminiService";
 import { ImageService } from "../imageService/ImageService";
 import { ICustomerService } from "../customer/ICustomerService";
 import { CustomerService } from "../customer/CustomerService";
@@ -53,9 +53,14 @@ export class MeasureService implements IMeasureService{
         createMeasure.measure_type = dto.measure_type
         createMeasure.customer_code = dto.customer_code
 
-        await this.customerService.createCustomer(dto.customer_code)
-        
-        return await this.measureRepository.register(createMeasure)
+        const customerExists = await this.checkCustomerExistance(dto.customer_code)
+
+        if(!customerExists){
+            await this.customerService.createCustomer(dto.customer_code)
+            return await this.measureRepository.register(createMeasure)
+        }
+        await this.customerService.updateCustomer(createMeasure)
+        return createMeasure as Measure;
     }
 
     async confirm(dto: UpdateMeasureRequestDTO): Promise<void> {
@@ -80,7 +85,8 @@ export class MeasureService implements IMeasureService{
         if(typeof result === 'string' && result !== null){
             return result;
         }
-        throw new AIErrorException(AI_ERROR);
+        console.error(new AIErrorException(AI_ERROR));
+        return "-1";
     }
 
     private isValidBodyRequestToRegister(dto:UploadMeasureDTO):boolean{
@@ -113,6 +119,16 @@ export class MeasureService implements IMeasureService{
             return Number(aiResponse);
         } catch (error) {
             throw new InvalidDataException(INVALID_DATA)
+        }
+    }
+
+    private async checkCustomerExistance(customer_code:string):Promise<boolean>{
+        try {
+            await this.customerService.getCustomer({customer_code});
+            return true;
+        } catch (error) {
+            console.error(error)
+            return false
         }
     }
 

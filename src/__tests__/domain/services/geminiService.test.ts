@@ -4,14 +4,15 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { IGeminiService } from '../../../domain/service/geminiService/IGeminiService';
-import { GeminiService } from '../../../domain/service/geminiService/Gemini';
+import { GeminiService } from '../../../domain/service/geminiService/GeminiService';
+import { imagePath } from '../../../domain/service/imageService/ImagePath';
 
 
 vi.mock('dotenv', async (importOriginal) => {
     const actual:any = await importOriginal();
     return {
       ...actual,
-      config: vi.fn(), // Mocking the config method
+      config: vi.fn(),
     };
   });
 
@@ -52,7 +53,6 @@ describe('GeminiService', () => {
 
   it('should return the correct text when the API responds successfully', async () => {
     const mockFileData = Buffer.from('mocked image data');
-    const mockBase64Data = mockFileData.toString('base64');
 
     vi.spyOn(fs.promises, 'readFile').mockResolvedValue(mockFileData);
 
@@ -63,10 +63,10 @@ describe('GeminiService', () => {
     };
     vi.spyOn(mockedModel, 'generateContent').mockResolvedValue(mockResponse);
 
-    const result = await geminiService.consultWithAi('/testfile.jpg', 'jpeg');
+    const result = await geminiService.consultWithAi(`${imagePath}testfile.jpg`, 'jpeg');
 
     expect(result).toBe('12345');
-    expect(fs.promises.readFile).toHaveBeenCalledWith(path.join(__dirname, '../../../public/testfile.jpg'));
+    expect(fs.promises.readFile).toHaveBeenCalledWith(path.join(imagePath, 'testfile.jpg'));
 
     });
 

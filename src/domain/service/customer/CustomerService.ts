@@ -2,8 +2,9 @@ import { Customer } from "@prisma/client";
 import { ICustomerService } from "./ICustomerService";
 import { CustomerRepository } from "../../../repository/customer/customerRepository";
 import { QueryParams } from "../../dto/params/queryParams";
-import { InvalidTypeException, NotFoundException } from "../../../exceptions/Exceptions";
-import { CUSTOMER_NOT_FOUND, INVALID_TYPE } from "../../../exceptions/errorCodes";
+import { InvalidDataException, InvalidTypeException, NotFoundException } from "../../../exceptions/Exceptions";
+import { CUSTOMER_NOT_FOUND, INVALID_DATA, INVALID_TYPE } from "../../../exceptions/errorCodes";
+import { CreateMeasureDTO } from "../../dto/measures/createMeasure";
 
 export class CustomerService implements ICustomerService{
 
@@ -28,6 +29,20 @@ export class CustomerService implements ICustomerService{
     }
 
     async createCustomer(code:string): Promise<void>{
-        await this.customerRepository.createCustomer(code);
+        try {
+            await this.customerRepository.createCustomer(code);
+        } catch (error) {
+            console.error(error)
+            throw new InvalidDataException(INVALID_DATA)
+        }
+    }
+
+    async updateCustomer(measure:CreateMeasureDTO): Promise<void>{
+        try {
+            await this.customerRepository.updateCustomer(measure);
+        } catch (error) {
+            console.error(error)
+            throw new InvalidDataException(INVALID_DATA)
+        }
     }
 }

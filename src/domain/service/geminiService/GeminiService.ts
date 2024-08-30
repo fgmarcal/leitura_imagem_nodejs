@@ -1,25 +1,31 @@
-import { GoogleGenerativeAI, GenerativeModel, Part } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerativeModel, Part, GenerationConfig } from "@google/generative-ai";
 import { IGeminiService } from "./IGeminiService";
 import fs from 'node:fs'
-import path from 'node:path'
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 export class GeminiService implements IGeminiService{
 
-    private publicPath:string = path.join(__dirname, '../../../public')
-
     private API_KEY:string = String(process.env.GEMINI_API_KEY);
     private genAI:GoogleGenerativeAI = new GoogleGenerativeAI(this.API_KEY);
 
-    private model:GenerativeModel = this.genAI.getGenerativeModel({model:"gemini-1.5-flash-latest"});
+    private generationConfig:GenerationConfig = {
+        candidateCount: 1,
+        stopSequences:[],
+        maxOutputTokens: 2,
+        temperature: 0,
+    };
+
+    private model:GenerativeModel = this.genAI.getGenerativeModel({
+        model:"gemini-1.5-flash", 
+        generationConfig:this.generationConfig
+    });
 
 
 
     async consultWithAi(receivedFile: string, extension:string): Promise<string|null> {
 
-        const filePath:string = `${this.publicPath}${receivedFile}`;
         const mime:string = `image/${extension}`
 
         const prompt:string =  `
@@ -27,12 +33,13 @@ export class GeminiService implements IGeminiService{
             Trata-se de uma imagem de um hidrômetro ou gasômetro.\n
             Sua função é identificar o valor da medição.\n
             A medição é número mostrado no display no artefato de medição.\n
-            O número costuma estar ao centro do artefato de medição.\n
-            Retorne o número de medição completo ou então, em caso de não conseguir identificar, retorne -1.\n
+            O display costuma estar ao centro do artefato de medição.\n
+            Retorne o número de medição como um inteiro, ignorando os zeros à esquerda\n
+            Se não receber uma imagem, retorne 0.
         `
 
         try {
-            const imageData = await fs.promises.readFile(filePath);
+            const imageData = await fs.promises.readFile(receivedFile);
             const imageBase64 = imageData.toString("base64");
             const request = 
                 [
@@ -47,7 +54,7 @@ export class GeminiService implements IGeminiService{
                 }                
             ]
 
-            const result = await this.model.generateContent([prompt,...request])
+            const result = await this.model.generateContent(request)
 
             const response = result.response;
 
