@@ -5,7 +5,7 @@ FROM node:18 AS build
 WORKDIR /usr/src/app
 
 # Cria diretório para imagens e dá autorização de escrita
-RUN mkdir -p /usr/src/app/dist/public/img && chmod -R 755 /usr/src/app/dist
+RUN mkdir -p /usr/src/app/public/img && chmod -R 755 /usr/src/app/public/img
 
 
 # Copia o package.json e o package-lock.json para o diretório de trabalho

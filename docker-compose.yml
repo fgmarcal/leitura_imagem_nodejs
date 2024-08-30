@@ -9,8 +9,5 @@ services:
     volumes:
       - ./prisma/database:/usr/src/app/prisma/database
       - ./prisma/schema.prisma:/usr/src/app/prisma/schema.prisma
-      - ./src/public/img:/usr/src/app/dist/public/img
+      - ./public/img:/usr/src/app/public/img
       - ./.env:/usr/src/app/.env
-
-volumes:
-  db:
