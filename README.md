@@ -165,8 +165,14 @@ Durante o desenvolvimento da aplicação a IA apresentou comportamento errático
 não retornou um resultado satisfatório de leitura de imagem, sendo assim, houve a motivação de criação do erro "AI_ERROR" para tratar
 as chamadas mal sucedidas junto à inteligência artificial utilizada.
 
-Também foi feita uma correção na resposta da IA para que, caso a leitura fosse mal sucedida, o valor retornado seja um inteiro de valor -1.
-Desta forma, ao receber o valor de -1, o usuário da aplicação obrigatoriamente deverá confirmar o valor manualmente, utilizando o endpoint PATCH
+Neste caso, a aplicação retorna como referência o inteiro -1 para dar andamento no processo de cadastro de leitura e confirmação manual pelo operador.
+
+Também foi feita uma correção na resposta da IA para que, caso a leitura fosse mal sucedida, o valor retornado seja um inteiro de valor 0.
+Desta forma, ao receber o valor de 0, o usuário da aplicação obrigatoriamente deverá confirmar o valor manualmente, utilizando o endpoint PATCH
+
+Sendo assim, em caso de erro interno ou externo, o resultado é -1 ou 0.
+
+Caso a IA consiga ler o número do hidrômetro ou gasômetro, retornará este número.
 
 A própria IA do Google, ao ser questionada, informou que o gemini vision pode não suportar a leitura de imagens, apesar da documentação oficial contradizer esta informação
 
