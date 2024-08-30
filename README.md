@@ -87,6 +87,7 @@ A propriedade **image** deve receber uma string base64 no seguinte formato:
 
   - Este endpoint aceita query parameter "measure_type" que deve ser "WATER" ou "GAS"
   - Se o parâmetro for informado, o filtro apenas retorna o tipo especificado.
+  - Caso não seja informado, retorna uma lista com todas as medições do cliente.
     
         /<customer_code>/list?measure_type=WATER
 
