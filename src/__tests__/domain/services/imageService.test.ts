@@ -30,4 +30,14 @@ describe('ImageService', () => {
     expect(extension).toBe('jpeg');
   });
 
+  it('should delete an image file', async () => {
+    const mockUrl = '/path/to/image.png';
+
+    const mockUnlink = vi.spyOn(fs.promises, 'unlink').mockResolvedValue(undefined);
+  
+    await imageService.delete(mockUrl);
+  
+    expect(mockUnlink).toHaveBeenCalledWith(mockUrl);
+  });
+
 });
