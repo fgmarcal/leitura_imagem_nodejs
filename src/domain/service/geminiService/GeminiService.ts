@@ -2,7 +2,6 @@ import { GoogleGenerativeAI, GenerativeModel, Part, GenerationConfig } from "@go
 import { IGeminiService } from "./IGeminiService";
 import fs from 'node:fs'
 import dotenv from 'dotenv';
-import { imagePath } from "../imageService/ImagePath";
 
 dotenv.config();
 

@@ -4,6 +4,7 @@ import { MeasureType, QueryParams } from '../../domain/dto/params/queryParams';
 import { ICustomerRepository } from '../../repository/customer/ICustomerRepository';
 import { CustomerRepository } from '../../repository/customer/customerRepository';
 import { Customer, Measure } from '@prisma/client';
+import { CreateMeasureDTO } from '../../domain/dto/measures/createMeasure';
 
 
 vi.mock('../../domain/service/prisma/prisma', () => ({
@@ -11,6 +12,7 @@ vi.mock('../../domain/service/prisma/prisma', () => ({
         customer: {
             create: vi.fn(),
             findUnique: vi.fn(),
+            update:vi.fn(),
         },
     },
 }));
@@ -26,6 +28,37 @@ describe('CustomerRepository', () => {
             data: { customer_code: code },
         });
     });
+
+    it('should update a customer adding a new measure', async () => {
+        const measure: CreateMeasureDTO = {
+            customer_code: 'customer123',
+            measure_datetime: new Date(),
+            measure_type: 'WEIGHT',
+            measure_value: 75,
+            has_confirmed: true,
+            image_url: 'img/image.png',
+        };
+
+        await customerRepo.updateCustomer(measure);
+    
+        expect(prisma.customer.update).toHaveBeenCalledWith({
+            where: { customer_code: measure.customer_code },
+            data: {
+                measures: {
+                    create: {
+                        measure_datetime: measure.measure_datetime,
+                        measure_type: measure.measure_type,
+                        measure_value: measure.measure_value,
+                        has_confirmed: measure.has_confirmed,
+                        image_url: measure.image_url,
+                    },
+                },
+            },
+        });
+    });
+
+
+
     it('should return a customer with measures', async () => {
         const queryParams = {
             customer_code: 'customer123',

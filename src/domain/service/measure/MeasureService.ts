@@ -54,12 +54,13 @@ export class MeasureService implements IMeasureService{
         createMeasure.customer_code = dto.customer_code
 
         const customerExists = await this.checkCustomerExistance(dto.customer_code)
-        if(customerExists){
-            await this.customerService.updateCustomer(createMeasure)
+
+        if(!customerExists){
+            await this.customerService.createCustomer(dto.customer_code)
+            return await this.measureRepository.register(createMeasure)
         }
-        await this.customerService.createCustomer(dto.customer_code)
-        
-        return await this.measureRepository.register(createMeasure)
+        await this.customerService.updateCustomer(createMeasure)
+        return createMeasure as Measure;
     }
 
     async confirm(dto: UpdateMeasureRequestDTO): Promise<void> {
@@ -122,11 +123,13 @@ export class MeasureService implements IMeasureService{
     }
 
     private async checkCustomerExistance(customer_code:string):Promise<boolean>{
-        const exists = await this.customerService.getCustomer({customer_code});
-        if(exists == null){
-            return false;
+        try {
+            await this.customerService.getCustomer({customer_code});
+            return true;
+        } catch (error) {
+            console.error(error)
+            return false
         }
-        return true;
     }
 
 }
