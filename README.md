@@ -149,7 +149,7 @@ A propriedade **image** deve receber uma string base64 no seguinte formato:
         status:409
     }
 
-**Status Code 421: CONFLICT**
+**Status Code 421: MISDIRECT REQUEST**
 
 *AI_ERROR*
 
